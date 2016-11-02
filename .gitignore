@@ -1,5 +1,8 @@
-# Object file
-*.o
+.DS_Store
+*.backup
+*.log
+*.bak
+*~
+.*.swp
 
-# Ada Library Information
-*.ali
+db_datadir

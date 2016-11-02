@@ -1,0 +1,38 @@
+version: '2'
+services:
+  pdns:
+    build: ./pdns/
+    ports:
+      - 127.0.0.1:53:53
+      - 127.0.0.1:53:53/udp
+      - 127.0.0.1:8081:8081
+    environment:
+      MYSQL_ROOT_PASSWORD: hoge
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+    restart: always
+
+  mariadb:
+    image: mariadb
+    volumes:
+      - ./db_datadir:/var/lib/mysql
+      - ./MariaDB:/docker-entrypoint-initdb.d/
+    environment:
+      MYSQL_ROOT_PASSWORD: hoge
+    restart: always
+
+  pdns_admin:
+    build: ./pdns_admin/
+    ports:
+      - 127.0.0.01:9393:9393
+    links:
+      - mariadb
+      - pdns
+    environment:
+      MYSQL_POWERDNS_USER_PASSWORD: hoge
+    depends_on:
+      - mariadb
+    entrypoint: /work/PowerDNS-Admin/run.py
+#    restart: always
