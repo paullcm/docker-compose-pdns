@@ -9,7 +9,6 @@ rm -rf /var/cache/apk/*
 ENV WORK /work
 WORKDIR ${WORK}
 
-
 # git clone
 RUN git clone https://github.com/ngoduykhanh/PowerDNS-Admin.git
 
@@ -22,9 +21,7 @@ RUN pip install -r PowerDNS-Admin/requirements.txt
 ADD config.py ${WORK}/PowerDNS-Admin/
 
 # pdns run
-ADD boot.sh ${WORK}/
 EXPOSE 9393:9393
-CMD bash ${WORK}/boot.sh
 
 ## Todo
 # build時に使用したdev系パッケージは消す

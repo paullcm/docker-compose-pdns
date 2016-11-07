@@ -15,7 +15,3 @@ ADD conf/pdns.conf /etc/pdns/pdns.conf
 # BOOT: Daemon
 ADD run.sh /tmp/run.sh
 EXPOSE 53/udp 53/tcp 8081/tcp
-
-
-CMD bash /tmp/run.sh
-

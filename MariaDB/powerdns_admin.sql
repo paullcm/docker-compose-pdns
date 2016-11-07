@@ -1,6 +1,6 @@
 /* Create Database and root user */
 CREATE DATABASE IF NOT EXISTS powerdnsadmin;
-GRANT ALL PRIVILEGES ON powerdnsadmin.* TO powerdnsadmin@'%' IDENTIFIED BY 'hoge';
+GRANT ALL PRIVILEGES ON powerdnsadmin.* TO powerdnsadmin@'%' IDENTIFIED BY 'takoyaki';
 use powerdnsadmin;
 
 
