@@ -206,7 +206,7 @@ CREATE TABLE `setting` (
 
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
-INSERT INTO `setting` VALUES (1,'maintenance','False'),(2,'fullscreen_layout','True'),(3,'record_helper','True'),(4,'login_ldap_first','True'),(5,'default_record_table_size','15'),(6,'default_domain_table_size','10');
+INSERT INTO `setting` VALUES (1,'maintenance','False'),(2,'fullscreen_layout','True'),(3,'record_helper','True'),(4,'login_ldap_first','True'),(5,'default_record_table_size','15'),(6,'default_domain_table_size','10'),(7,'auto_ptr','False');
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
