@@ -24,8 +24,8 @@ services:
       MYSQL_ROOT_PASSWORD: pizza_coke
     restart: always
 
-  pdns_admin:
-    build: ./pdns_admin/
+  powerdns-admin:
+    build: ./PowerDNS-Admin/
     ports:
       - 127.0.0.01:9393:9393
     links:
@@ -36,4 +36,3 @@ services:
     depends_on:
       - mariadb
     entrypoint: /work/PowerDNS-Admin/run.py
-#    restart: always
