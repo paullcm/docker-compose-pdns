@@ -2,6 +2,7 @@ version: '2'
 services:
   pdns:
     build: ./pdns/
+    image: pdns
     ports:
       - 127.0.0.1:53:53
       - 127.0.0.1:53:53/udp
@@ -22,10 +23,10 @@ services:
       - ./MariaDB:/docker-entrypoint-initdb.d/
     environment:
       MYSQL_ROOT_PASSWORD: pizza_coke
-    restart: always
 
-  pdns_admin:
-    build: ./pdns_admin/
+  powerdns-admin:
+    build: ./PowerDNS-Admin/
+    image: powerdns-admin
     ports:
       - 127.0.0.01:9393:9393
     links:
@@ -36,4 +37,3 @@ services:
     depends_on:
       - mariadb
     entrypoint: /work/PowerDNS-Admin/run.py
-#    restart: always

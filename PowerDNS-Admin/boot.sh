@@ -3,4 +3,4 @@
 set -o errexit
 set -o pipefail
 
-/usr/sbin/rsyslogd && /usr/sbin/pdns_server
+"${WORK}"/PowerDNS-Admin/run.py
