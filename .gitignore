@@ -4,5 +4,7 @@
 *.bak
 *~
 .*.swp
+_*
 
 db_datadir
+
