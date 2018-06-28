@@ -1,14 +1,15 @@
-version: '2'
+version: '3'
 services:
   pdns:
-    build: ./pdns/
+    build:
+      context: ./pdns/
+      args:
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     image: pdns
     ports:
       - 127.0.0.1:53:53
       - 127.0.0.1:53:53/udp
       - 127.0.0.1:8081:8081
-    environment:
-      MYSQL_ROOT_PASSWORD: pizza_coke
     links:
       - mariadb
     depends_on:
@@ -21,19 +22,25 @@ services:
     volumes:
       - ./db_datadir:/var/lib/mysql
       - ./MariaDB:/docker-entrypoint-initdb.d/
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: pizza_coke
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
-  powerdns-admin:
-    build: ./PowerDNS-Admin/
-    image: powerdns-admin
+  djangopowerdns:
+    build:
+      context: ./DjangoPowerDNS
+      dockerfile: ./Dockerfile
+      args:
+        - DJANGO_SU_NAME=${DJANGO_SU_NAME}
+        - DJANGO_SU_EMAIL=${DJANGO_SU_EMAIL}
+        - DJANGO_SU_PASSWD=${DJANGO_SU_PASSWD}
+    image: djangopowerdns
     ports:
-      - 127.0.0.01:9393:9393
+      - 127.0.0.1:8053:8053
     links:
       - mariadb
       - pdns
-    environment:
-      MYSQL_POWERDNS_USER_PASSWORD: takoyaki
     depends_on:
       - mariadb
-    entrypoint: /work/PowerDNS-Admin/run.py
+    restart: unless-stopped
+    entrypoint: /bin/bash ./run.sh
