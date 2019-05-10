@@ -43,4 +43,4 @@ services:
     depends_on:
       - mariadb
     restart: unless-stopped
-    entrypoint: /bin/bash ./run.sh
+    entrypoint: dockerize -wait tcp://mariadb:3306 /bin/bash ./run.sh

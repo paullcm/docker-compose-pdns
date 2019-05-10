@@ -8,7 +8,7 @@ ENV SU_EMAIL=${DJANGO_SU_EMAIL}
 ENV SU_PASSWD=${DJANGO_SU_PASSWD}
 
 RUN export DEBIAN_FRONTEND=noninteractive && apt update \
- && apt install -y python-dev python-pip python-mysqldb python-setuptools gcc git uwsgi mysql-client libmariadbclient-dev tzdata bash --no-install-recommends \
+ && apt install -y python-dev python-pip python-mysqldb python-setuptools gcc git uwsgi mysql-client libmariadbclient-dev tzdata bash curl openssl --no-install-recommends \
  && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 ENV WORK /work
@@ -32,6 +32,12 @@ RUN export SECRET_KEY=$(cat /proc/sys/kernel/random/uuid) \
  && sed -i -e "s|soome-secret-key--please-change-me-now|${SECRET_KEY}|g" DjangoPowerDNS/DjangoPowerDNS/settings.py
 
 RUN pip install --no-cache-dir -r DjangoPowerDNS/requirements.txt
+
+## Installation: dockerize
+ENV DOCKERIZE_VERSION v0.6.1
+RUN curl -L -o ./dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf ./dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm ./dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 ## Clean up
 RUN apt remove --purge -y gcc git curl \
