@@ -1,33 +1,45 @@
 # docker-compose-pdns
-DockerCompose for PowerDNS(recursor, backend MySQL(MariaDB)) with DjangoPowerDNS and MariaDB
+PowerDNS in Docker container with WebFrontend DjangoPowerDNS and Backend MariaDB.
 
-以下を解決できるはず！
-* 手軽にDNSサーバを立てたい
-* hostsだとcnameが使えない
+You can use this file to solve the following:
+* Easily build and run a DNS server
+* hosts file do not name resolve DNS record types(CNAME, MX and more..)
 
-# 起動(How to launch)
+Notice:
+- Only allow connect localhost(127.0.0.1)
+
+## Installation
+git clone this repository.
+```bash
+$ git clone https://github.com/m120/docker-compose-pdns
 ```
+
+## Usage
+### Start PowerDNS server:
+```bash
 $ docker-compose up -d
 ```
 
-# 使い方 (How to use)
+### Go DjangoPowerDNS management site:  
+- http://127.0.0.1:8053/
+  - Username: `admin`
+  - Password: `admin`
+
+#### Next Step:
+##### 2. DNS Query Check (Use: dig or nslookup)
+```
+$ dig {Added DNS Record} @127.0.0.1
+```
+
+##### 3. Settign for OS DNS Resolver `127.0.0.1`
+For MacOS: 
+- Step1: `System Preferences`
+- Step2: Chose your Network
+  - Ex: `Wi-Fi`
+- Step3: `Advanced...` -> `DNS` -> `DNSServer`
+  - `127.0.0.1`
+
+
 ## Memo
-- 特にドメインやレコードを登録しなくても、recusorでGoogle Public DNSに問い合わせてくれる。
-- localhostのみしか接続を許可していない
-
-## 1. ドメインやレコードを登録   
- http://127.0.0.1:8053/   
-  - Username: admin   
-  - Password: admin   
-
-## 2. digやnslookupで確認
-```
-$ dig 登録したレコード @127.0.0.1
-```
-
-## 3. DNSを127.0.0.1に変更する
-OSのDNS設定を変更する
-
-## その他
-### pdsnのstatus   
- - http://127.0.0.1:8081/
+- pdsn status   
+  - http://127.0.0.1:8081/
