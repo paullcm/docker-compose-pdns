@@ -20,7 +20,7 @@ services:
         - TIMEZONE=${TIMEZONE}
     image: pdns
     ports:
-      - 127.0.0.1:8081:8081
+      - ${ALLOW_IPADDR}:8081:8081
     links:
       - mariadb
     depends_on:
@@ -45,9 +45,9 @@ services:
     volumes:
       - ./pdns/conf/forward-zones-file:/etc/pdns/forward-zones-file
     ports:
-      - 127.0.0.1:53:53
-      - 127.0.0.1:53:53/udp
-      - 127.0.0.1:8082:8082
+      - ${ALLOW_IPADDR}:53:53
+      - ${ALLOW_IPADDR}:53:53/udp
+      - ${ALLOW_IPADDR}:8082:8082
     links:
       - pdns
     depends_on:
@@ -80,7 +80,7 @@ services:
         - DJANGO_SU_PASSWD=${DJANGO_SU_PASSWD}
     image: djangopowerdns
     ports:
-      - 127.0.0.1:8053:8053
+      - ${ALLOW_IPADDR}:8053:8053
     links:
       - mariadb
       - pdns
