@@ -7,6 +7,7 @@ You can use this file to solve the following:
 
 Notice:
 - Only allow connect localhost(127.0.0.1)
+  - see `.env` file
 
 ## Installation
 git clone this repository.
@@ -20,18 +21,33 @@ $ git clone https://github.com/m120/docker-compose-pdns
 $ docker-compose up -d
 ```
 
-### Go DjangoPowerDNS management site:  
+### Add Domain
+#### 01: Go DjangoPowerDNS management site:  
 - http://127.0.0.1:8053/
   - Username: `admin`
   - Password: `admin`
 
-#### Next Step:
-##### 2. DNS Query Check (Use: dig or nslookup)
+`Add Domains`
+
+#### 02: Add `forward-zones-file`
+- ./pdns/conf/forward-zones-file:
+  - *Not Change `172.53.1.1:5300`*
+  ```
+  +example.com=172.53.1.1:5300
+  ```
+- restart pdns_recursor: 
+  ```bash
+  $ docker-compose restart pdns_recursor
+  ```
+
+### Check:
+#### DNS Query Check (Use: dig or nslookup)
 ```
 $ dig {Added DNS Record} @127.0.0.1
 ```
 
-##### 3. Settign for OS DNS Resolver `127.0.0.1`
+### Setting local resolver
+#### Settign for OS DNS Resolver `127.0.0.1`
 For MacOS: 
 - Step1: `System Preferences`
 - Step2: Chose your Network
@@ -39,7 +55,32 @@ For MacOS:
 - Step3: `Advanced...` -> `DNS` -> `DNSServer`
   - `127.0.0.1`
 
+*MacOSCLI: http://osxdaily.com/2015/06/02/change-dns-command-line-mac-os-x/*
 
-## Memo
-- pdsn status   
+
+
+## pdns Status
+- pdns status   
   - http://127.0.0.1:8081/
+
+- pdns recursor status   
+  - http://127.0.0.1:8082/
+
+
+
+
+## Trouble shooting
+### cache flush
+- resursor:
+  ```
+  $ docker-compose exec pdns_recursor rec_control wipe-cache
+  ```
+
+- pdns AuthoritativeServer
+  ```
+  $ docker-compose exec pdns pdns_control purge
+  ```
+
+## Todos
+- [ ] Add Containar `carbon`  
+- [ ] Update Readme... 
