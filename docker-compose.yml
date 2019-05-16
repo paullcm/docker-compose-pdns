@@ -1,23 +1,58 @@
 version: '3'
+
+networks:
+  pdns_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.53.0.0/16
+
 services:
   pdns:
+    container_name: pdns
+    hostname: pdns
     build:
       context: ./pdns/
+      dockerfile: ./Dockerfile
       args:
         - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     image: pdns
     ports:
-      - 127.0.0.1:53:53
-      - 127.0.0.1:53:53/udp
       - 127.0.0.1:8081:8081
     links:
       - mariadb
     depends_on:
       - mariadb
-    entrypoint: /bin/bash /tmp/run.sh
+    entrypoint: "/bin/sh -c '/usr/sbin/rsyslogd && /usr/sbin/pdns_server'"
     restart: always
+    networks:
+      pdns_net:
+        ipv4_address: 172.53.1.1
+
+  pdns_recursor:
+    container_name: pdns_recursor
+    hostname: pdns_recursor
+    build:
+      context: ./pdns/
+      dockerfile: ./pdns_recursor.Dockerfile
+    image: pdns_recursor
+    volumes:
+      - ./pdns/conf/forward-zones-file:/etc/pdns/forward-zones-file
+    ports:
+      - 127.0.0.1:53:53
+      - 127.0.0.1:53:53/udp
+      - 127.0.0.1:8082:8082
+    links:
+      - pdns
+    depends_on:
+      - pdns
+    entrypoint: "/bin/sh -c '/usr/sbin/rsyslogd && /usr/sbin/pdns_recursor'"
+    restart: always
+    networks:
+      pdns_net:
 
   mariadb:
+    container_name: mariadb
     image: mariadb
     volumes:
       - ./db_datadir:/var/lib/mysql
@@ -25,8 +60,11 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    networks:
+      pdns_net:
 
   djangopowerdns:
+    container_name: djangopowerdns
     build:
       context: ./DjangoPowerDNS
       dockerfile: ./Dockerfile
@@ -44,3 +82,5 @@ services:
       - mariadb
     restart: unless-stopped
     entrypoint: dockerize -wait tcp://mariadb:3306 /bin/bash ./run.sh
+    networks:
+      pdns_net:
