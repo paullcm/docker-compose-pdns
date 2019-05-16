@@ -66,8 +66,13 @@ For MacOS:
 - pdns recursor status   
   - http://127.0.0.1:8082/
 
+### Open Graphite in a browser.
+- http://127.0.0.1:8096/
+- http://127.0.0.1:8096/dashboard
 
-
+- Login is (https://github.com/graphite-project/docker-graphite-statsd#secure-the-django-admin)
+  - username: root
+  - password: root
 
 ## Trouble shooting
 ### cache flush
@@ -82,5 +87,5 @@ For MacOS:
   ```
 
 ## Todos
-- [ ] Add Containar `carbon`  
+- [x] Add Containar `carbon`  
 - [ ] Update Readme... 

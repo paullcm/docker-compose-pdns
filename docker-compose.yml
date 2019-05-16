@@ -23,8 +23,10 @@ services:
       - ${ALLOW_IPADDR}:8081:8081
     links:
       - mariadb
+      - graphite
     depends_on:
       - mariadb
+      - graphite
     entrypoint: "/bin/sh -c '/usr/sbin/rsyslogd && /usr/sbin/pdns_server'"
     restart: always
     networks:
@@ -50,8 +52,10 @@ services:
       - ${ALLOW_IPADDR}:8082:8082
     links:
       - pdns
+      - graphite
     depends_on:
       - pdns
+      - graphite
     entrypoint: "/bin/sh -c '/usr/sbin/rsyslogd && /usr/sbin/pdns_recursor'"
     restart: always
     networks:
@@ -90,3 +94,13 @@ services:
     entrypoint: dockerize -wait tcp://mariadb:3306 /bin/bash ./run.sh
     networks:
       pdns_net:
+
+  graphite:
+    container_name: graphite
+    image: graphiteapp/graphite-statsd
+    restart: always
+    ports:
+      - ${ALLOW_IPADDR}:8096:80
+    networks:
+      pdns_net:
+        ipv4_address: 172.53.1.96
