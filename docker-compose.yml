@@ -16,6 +16,8 @@ services:
       dockerfile: ./Dockerfile
       args:
         - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - PDNS_API_KEY=${PDNS_API_KEY}
+        - TIMEZONE=${TIMEZONE}
     image: pdns
     ports:
       - 127.0.0.1:8081:8081
@@ -35,6 +37,10 @@ services:
     build:
       context: ./pdns/
       dockerfile: ./pdns_recursor.Dockerfile
+      args:
+        - PDNS_API_KEY=${PDNS_API_KEY}
+        - TIMEZONE=${TIMEZONE}
+        - PDNS_RECURSOR_IPADDR=${PDNS_RECURSOR_IPADDR}
     image: pdns_recursor
     volumes:
       - ./pdns/conf/forward-zones-file:/etc/pdns/forward-zones-file
