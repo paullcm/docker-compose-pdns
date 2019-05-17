@@ -99,6 +99,8 @@ services:
     container_name: graphite
     image: graphiteapp/graphite-statsd
     restart: always
+    environment:
+      GRAPHITE_TIME_ZONE: ${TIMEZONE}
     ports:
       - ${ALLOW_IPADDR}:8096:80
     networks:
