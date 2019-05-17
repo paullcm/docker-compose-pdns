@@ -6,5 +6,6 @@
 .*.swp
 _*
 
-db_datadir
 forward-zones-file
+datavolume
+
