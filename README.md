@@ -8,6 +8,7 @@ You can use this file to solve the following:
 Notice:
 - Only allow connect localhost(127.0.0.1)
   - see `.env` file
+    - `ALLOW_IPADDR` 
 
 ## Installation
 git clone this repository.
@@ -66,13 +67,15 @@ For MacOS:
 - pdns recursor status   
   - http://127.0.0.1:8082/
 
-### Open Graphite in a browser.
-- http://127.0.0.1:8096/
-- http://127.0.0.1:8096/dashboard
+## Grafana
+- http://127.0.0.1:3000
 
-- Login is (https://github.com/graphite-project/docker-graphite-statsd#secure-the-django-admin)
-  - username: root
-  - password: root
+- Login is
+  - username: `admin`
+  - password: `admin`
+
+### prometheus
+- http://127.0.0.1:9090
 
 ## Trouble shooting
 ### cache flush
@@ -87,5 +90,8 @@ For MacOS:
   ```
 
 ## Todos
-- [x] Add Containar `carbon`  
-- [ ] Update Readme... 
+- [x] graphite -> Prometheus (with grafana)
+  - [x] persistent
+- [ ] Update readme.md... 
+- [ ] cache env
+- [ ] Docker Network refactoring
