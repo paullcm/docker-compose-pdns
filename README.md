@@ -1,11 +1,20 @@
 # docker-compose-pdns
-PowerDNS in Docker container with WebFrontend DjangoPowerDNS and Backend MariaDB.
+PowerDNS in Docker container.
 
-You can use this file to solve the following:
+#### You can use this file to solve the following:
 * Easily build and run a DNS server
 * hosts file do not name resolve DNS record types(CNAME, MX and more..)
 
-Notice:
+#### Features:
+- PowerDNS Recursor & Authoritative Server
+- WebFronend: DjangoPowerDNS
+- Data persistent
+  - backend: Mariadb
+- Monitoring
+  - Prometheus
+  - Grafana
+
+##### Notice:
 - Only allow connect localhost(127.0.0.1)
   - see `.env` file
     - `ALLOW_IPADDR` 
