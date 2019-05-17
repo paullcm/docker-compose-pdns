@@ -23,10 +23,8 @@ services:
       - ${ALLOW_IPADDR}:8081:8081
     links:
       - mariadb
-      - graphite
     depends_on:
       - mariadb
-      - graphite
     entrypoint: "/bin/sh -c '/usr/sbin/rsyslogd && /usr/sbin/pdns_server'"
     restart: always
     networks:
@@ -52,10 +50,8 @@ services:
       - ${ALLOW_IPADDR}:8082:8082
     links:
       - pdns
-      - graphite
     depends_on:
       - pdns
-      - graphite
     entrypoint: "/bin/sh -c '/usr/sbin/rsyslogd && /usr/sbin/pdns_recursor'"
     restart: always
     networks:
@@ -65,7 +61,7 @@ services:
     container_name: mariadb
     image: mariadb
     volumes:
-      - ./db_datadir:/var/lib/mysql
+      - ./datavolume/mariadb:/var/lib/mysql
       - ./MariaDB:/docker-entrypoint-initdb.d/
     restart: always
     environment:
@@ -95,14 +91,37 @@ services:
     networks:
       pdns_net:
 
-  graphite:
-    container_name: graphite
-    image: graphiteapp/graphite-statsd
-    restart: always
-    environment:
-      GRAPHITE_TIME_ZONE: ${TIMEZONE}
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./datavolume/prometheus:/prometheus
     ports:
-      - ${ALLOW_IPADDR}:8096:80
+      - ${ALLOW_IPADDR}:9090:9090
     networks:
       pdns_net:
-        ipv4_address: 172.53.1.96
+
+  powerdns-exporter:
+    container_name: powerdns-exporter
+    image: janeczku/powerdns-exporter
+    command: -api-url="http://pdns:8081//api/v1/servers" -api-key="${PDNS_API_KEY}"
+    networks:
+      pdns_net:
+
+  powerdns-exporter_recursor:
+    container_name: powerdns-exporter_recursor
+    image: janeczku/powerdns-exporter
+    command: -api-url="http://pdns_recursor:8082/api/v1/servers" -api-key="${PDNS_API_KEY}"
+    networks:
+      pdns_net:
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    volumes:
+      - ./datavolume/grafana:/var/lib/grafana
+    ports:
+      - ${ALLOW_IPADDR}:3000:3000
+    networks:
+      pdns_net:
